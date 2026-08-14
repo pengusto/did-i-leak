@@ -87,48 +87,34 @@ button:focus-visible {
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  opacity: .82;
+  opacity: .9;
   background:
-    radial-gradient(460px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 10%, transparent), transparent 65%),
-    radial-gradient(320px circle at calc(var(--mx) + var(--shift-x)) calc(var(--my) + var(--shift-y)), color-mix(in srgb, var(--danger) 6%, transparent), transparent 68%);
+    radial-gradient(ellipse 520px 430px at var(--mx) var(--my), color-mix(in srgb, var(--accent) 11%, transparent), transparent 72%),
+    radial-gradient(ellipse 620px 480px at calc(72% + var(--shift-x)) calc(48% + var(--shift-y)), color-mix(in srgb, var(--danger) 5%, transparent), transparent 74%);
 }
 
 .ambient-field::before {
   position: absolute;
-  inset: 0;
+  inset: -22%;
   content: "";
-  opacity: .18;
-  background-image: linear-gradient(color-mix(in srgb, var(--text) 13%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--text) 13%, transparent) 1px, transparent 1px);
-  background-size: 36px 36px;
-  mask-image: radial-gradient(circle at var(--mx) var(--my), #000 0 18%, transparent 58%);
-  -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my), #000 0 18%, transparent 58%);
-  transform: translate3d(calc(var(--shift-x) * .45), calc(var(--shift-y) * .45), 0);
+  opacity: .6;
+  background: radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 52%);
+  filter: blur(48px);
+  transform: translate3d(calc(var(--shift-x) * .55), calc(var(--shift-y) * .55), 0);
 }
 
-.ambient-reticle {
+.ambient-field::after {
   position: absolute;
-  top: var(--my);
-  left: var(--mx);
-  width: clamp(180px, 22vw, 300px);
-  aspect-ratio: 1;
-  border: 1px dashed color-mix(in srgb, var(--accent) 28%, transparent);
-  border-radius: 50%;
-  background: linear-gradient(color-mix(in srgb, var(--accent) 35%, transparent), color-mix(in srgb, var(--accent) 35%, transparent)) center / 1px 100% no-repeat, linear-gradient(90deg, color-mix(in srgb, var(--accent) 35%, transparent), color-mix(in srgb, var(--accent) 35%, transparent)) center / 100% 1px no-repeat;
-  opacity: .5;
-  transform: translate(-50%, -50%) translate3d(var(--shift-x), var(--shift-y), 0);
-}
-
-.ambient-reticle::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 7px;
-  height: 7px;
-  border: 1px solid var(--accent);
-  border-radius: 50%;
+  top: -15%;
+  bottom: -15%;
+  left: calc(var(--mx) - 9%);
+  width: 18%;
+  min-width: 130px;
   content: "";
-  background: var(--bg);
-  transform: translate(-50%, -50%);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 7%, transparent), transparent);
+  filter: blur(24px);
+  opacity: .32;
+  transform: translateX(var(--shift-x));
 }
 
 .site-header,
@@ -879,13 +865,14 @@ h1 strong { display: block; color: var(--danger); font-weight: inherit; }
 @media (prefers-reduced-motion: no-preference) {
   .trace-live { animation: trace-dash 2.2s linear infinite; }
   .node.blocked-glow { animation: glow-pulse 2.8s ease-in-out infinite; }
+  .ambient-field::after { animation: ambient-sweep 9s ease-in-out infinite alternate; }
   @keyframes trace-dash { to { stroke-dashoffset: -34; } }
   @keyframes glow-pulse { 50% { opacity: .07; } }
+  @keyframes ambient-sweep { to { opacity: .12; transform: translateX(42px); } }
 }
 
 @media (pointer: coarse) {
   .ambient-field { opacity: .4; }
-  .ambient-reticle { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
