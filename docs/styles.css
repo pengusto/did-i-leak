@@ -159,8 +159,8 @@ nav a:hover,
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, .98fr) minmax(420px, 1.02fr);
-  gap: clamp(44px, 8vw, 120px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(48px, 6vw, 84px);
   align-items: center;
   min-height: 680px;
   padding: 94px 0 100px;
@@ -204,9 +204,9 @@ h2 {
 }
 
 h1 {
-  max-width: 740px;
+  max-width: 640px;
   margin-bottom: 30px;
-  font-size: clamp(4.7rem, 9.8vw, 9.3rem);
+  font-size: clamp(4.6rem, 7.7vw, 8.2rem);
 }
 
 h1 strong { display: block; color: var(--danger); font-weight: inherit; }
