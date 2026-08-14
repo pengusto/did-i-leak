@@ -813,12 +813,8 @@ h1 strong { display: block; color: var(--danger); font-weight: inherit; }
 @media (prefers-reduced-motion: no-preference) {
   .trace-live { animation: trace-dash 2.2s linear infinite; }
   .node.blocked-glow { animation: glow-pulse 2.8s ease-in-out infinite; }
-  .hero-copy,
-  .hero-visual { animation: rise-in .7s ease both; }
-  .hero-visual { animation-delay: .08s; }
   @keyframes trace-dash { to { stroke-dashoffset: -34; } }
   @keyframes glow-pulse { 50% { opacity: .07; } }
-  @keyframes rise-in { from { transform: translateY(12px); } to { transform: translateY(0); } }
 }
 
 @media (prefers-reduced-motion: reduce) {
