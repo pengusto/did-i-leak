@@ -796,6 +796,7 @@ h1 strong { display: block; color: var(--danger); font-weight: inherit; }
 .legal-main {
   width: min(calc(100% - 48px), 790px);
   min-height: calc(100vh - 180px);
+  margin-inline: auto;
   padding: 105px 0 120px;
 }
 
