@@ -25,6 +25,24 @@ function setTheme(theme) {
 setTheme(root.dataset.theme === "light" ? "light" : "dark");
 themeToggle?.addEventListener("click", () => setTheme(root.dataset.theme === "light" ? "dark" : "light"));
 
+const ambientField = document.querySelector(".ambient-field");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const finePointer = window.matchMedia("(pointer: fine)");
+
+if (ambientField && !reducedMotion.matches && finePointer.matches) {
+  let frame = 0;
+  window.addEventListener("pointermove", (event) => {
+    if (event.pointerType && event.pointerType !== "mouse") return;
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => {
+      root.style.setProperty("--mx", `${(event.clientX / window.innerWidth) * 100}%`);
+      root.style.setProperty("--my", `${(event.clientY / window.innerHeight) * 100}%`);
+      root.style.setProperty("--shift-x", `${(event.clientX / window.innerWidth - .5) * 24}px`);
+      root.style.setProperty("--shift-y", `${(event.clientY / window.innerHeight - .38) * 20}px`);
+    });
+  }, { passive: true });
+}
+
 const copyButton = document.querySelector("[data-copy]");
 const copyStatus = document.querySelector(".copy-status");
 

@@ -10,6 +10,10 @@
   --accent: #d8ff55;
   --danger: #ff725d;
   --focus: #9aaaff;
+  --mx: 50%;
+  --my: 38%;
+  --shift-x: 0px;
+  --shift-y: 0px;
   --max: 1180px;
   --display: "Arial Narrow", "Avenir Next Condensed", "Helvetica Neue", sans-serif;
   --body: "Avenir Next", "Helvetica Neue", "Segoe UI", sans-serif;
@@ -35,6 +39,7 @@ html[data-theme="light"] {
 html { scroll-behavior: smooth; }
 
 body {
+  isolation: isolate;
   margin: 0;
   color: var(--text);
   background: var(--bg);
@@ -69,12 +74,71 @@ button:focus-visible {
 
 .noise {
   position: fixed;
-  z-index: -1;
+  z-index: 0;
   inset: 0;
   pointer-events: none;
   opacity: .035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
 }
+
+.ambient-field {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: .82;
+  background:
+    radial-gradient(460px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 10%, transparent), transparent 65%),
+    radial-gradient(320px circle at calc(var(--mx) + var(--shift-x)) calc(var(--my) + var(--shift-y)), color-mix(in srgb, var(--danger) 6%, transparent), transparent 68%);
+}
+
+.ambient-field::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  opacity: .18;
+  background-image: linear-gradient(color-mix(in srgb, var(--text) 13%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--text) 13%, transparent) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(circle at var(--mx) var(--my), #000 0 18%, transparent 58%);
+  -webkit-mask-image: radial-gradient(circle at var(--mx) var(--my), #000 0 18%, transparent 58%);
+  transform: translate3d(calc(var(--shift-x) * .45), calc(var(--shift-y) * .45), 0);
+}
+
+.ambient-reticle {
+  position: absolute;
+  top: var(--my);
+  left: var(--mx);
+  width: clamp(180px, 22vw, 300px);
+  aspect-ratio: 1;
+  border: 1px dashed color-mix(in srgb, var(--accent) 28%, transparent);
+  border-radius: 50%;
+  background: linear-gradient(color-mix(in srgb, var(--accent) 35%, transparent), color-mix(in srgb, var(--accent) 35%, transparent)) center / 1px 100% no-repeat, linear-gradient(90deg, color-mix(in srgb, var(--accent) 35%, transparent), color-mix(in srgb, var(--accent) 35%, transparent)) center / 100% 1px no-repeat;
+  opacity: .5;
+  transform: translate(-50%, -50%) translate3d(var(--shift-x), var(--shift-y), 0);
+}
+
+.ambient-reticle::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  content: "";
+  background: var(--bg);
+  transform: translate(-50%, -50%);
+}
+
+.site-header,
+main,
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+
+html[data-theme="light"] .ambient-field { opacity: .5; }
 
 .wrap {
   width: min(calc(100% - 48px), var(--max));
@@ -221,9 +285,9 @@ h1 strong { display: block; color: var(--danger); font-weight: inherit; }
   position: absolute;
   z-index: -1;
   right: -.06em;
-  bottom: .04em;
+  bottom: -.06em;
   left: -.08em;
-  height: .23em;
+  height: .14em;
   content: "";
   background: var(--accent);
   transform: rotate(-2deg);
@@ -251,6 +315,7 @@ h1 strong { display: block; color: var(--danger); font-weight: inherit; }
 }
 
 .command-box code {
+  flex: 1 1 auto;
   min-width: 0;
   overflow-x: auto;
   padding: 18px 17px;
@@ -263,12 +328,13 @@ h1 strong { display: block; color: var(--danger); font-weight: inherit; }
 .prompt { color: var(--accent); }
 
 .copy-button {
+  flex: 0 0 auto;
   align-self: stretch;
   border: 0;
   border-left: 1px solid #474b47;
   padding: 0 17px;
   color: var(--surface-strong);
-  background: var(--accent);
+  background: color-mix(in srgb, var(--accent) 86%, var(--surface-strong));
   font-family: var(--mono);
   font-size: .65rem;
   font-weight: 800;
@@ -817,6 +883,12 @@ h1 strong { display: block; color: var(--danger); font-weight: inherit; }
   @keyframes glow-pulse { 50% { opacity: .07; } }
 }
 
+@media (pointer: coarse) {
+  .ambient-field { opacity: .4; }
+  .ambient-reticle { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .ambient-field { display: none; }
 }
