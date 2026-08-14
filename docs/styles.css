@@ -818,7 +818,7 @@ h1 strong { display: block; color: var(--danger); font-weight: inherit; }
   .hero-visual { animation-delay: .08s; }
   @keyframes trace-dash { to { stroke-dashoffset: -34; } }
   @keyframes glow-pulse { 50% { opacity: .07; } }
-  @keyframes rise-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes rise-in { from { transform: translateY(12px); } to { transform: translateY(0); } }
 }
 
 @media (prefers-reduced-motion: reduce) {
