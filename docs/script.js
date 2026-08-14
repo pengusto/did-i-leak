@@ -26,13 +26,17 @@ setTheme(root.dataset.theme === "light" ? "light" : "dark");
 themeToggle?.addEventListener("click", () => setTheme(root.dataset.theme === "light" ? "dark" : "light"));
 
 const ambientField = document.querySelector(".ambient-field");
+const ambientCanvas = document.querySelector(".ambient-canvas");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const finePointer = window.matchMedia("(pointer: fine)");
+const ambientPointer = { x: .58, y: .42, targetX: .58, targetY: .42 };
 
 if (ambientField && !reducedMotion.matches && finePointer.matches) {
   let frame = 0;
   window.addEventListener("pointermove", (event) => {
     if (event.pointerType && event.pointerType !== "mouse") return;
+    ambientPointer.targetX = event.clientX / window.innerWidth;
+    ambientPointer.targetY = event.clientY / window.innerHeight;
     cancelAnimationFrame(frame);
     frame = requestAnimationFrame(() => {
       root.style.setProperty("--mx", `${(event.clientX / window.innerWidth) * 100}%`);
@@ -41,6 +45,64 @@ if (ambientField && !reducedMotion.matches && finePointer.matches) {
       root.style.setProperty("--shift-y", `${(event.clientY / window.innerHeight - .38) * 20}px`);
     });
   }, { passive: true });
+}
+
+if (ambientCanvas && !reducedMotion.matches) {
+  const context = ambientCanvas.getContext("2d");
+  let width = 0;
+  let height = 0;
+  let scale = 1;
+
+  const resizeAmbient = () => {
+    const bounds = ambientCanvas.getBoundingClientRect();
+    scale = Math.min(window.devicePixelRatio || 1, 2);
+    width = bounds.width;
+    height = bounds.height;
+    ambientCanvas.width = width * scale;
+    ambientCanvas.height = height * scale;
+    context.setTransform(scale, 0, 0, scale, 0, 0);
+  };
+
+  const drawAmbient = (time) => {
+    ambientPointer.x += (ambientPointer.targetX - ambientPointer.x) * .035;
+    ambientPointer.y += (ambientPointer.targetY - ambientPointer.y) * .035;
+    context.clearRect(0, 0, width, height);
+    context.lineCap = "round";
+
+    const colors = [
+      getComputedStyle(root).getPropertyValue("--accent").trim(),
+      getComputedStyle(root).getPropertyValue("--danger").trim(),
+    ];
+    colors.forEach((color, index) => {
+      const phase = index * 2.4;
+      const base = height * (.34 + index * .2);
+      const amplitude = height * (.09 - index * .015);
+      const path = new Path2D();
+      for (let step = 0; step <= 28; step += 1) {
+        const progress = step / 28;
+        const x = -90 + progress * (width + 180);
+        const y = base + Math.sin(progress * 6.4 + time * (.00042 - index * .00012) + phase) * amplitude + (ambientPointer.y - .42) * height * .1;
+        if (step === 0) path.moveTo(x, y);
+        else path.lineTo(x, y);
+      }
+      context.strokeStyle = color;
+      context.shadowColor = color;
+      context.globalAlpha = .055;
+      context.shadowBlur = 36;
+      context.lineWidth = 28;
+      context.stroke(path);
+      context.globalAlpha = .24 - index * .05;
+      context.shadowBlur = 14;
+      context.lineWidth = 1.4;
+      context.stroke(path);
+    });
+    context.globalAlpha = 1;
+    requestAnimationFrame(drawAmbient);
+  };
+
+  resizeAmbient();
+  window.addEventListener("resize", resizeAmbient, { passive: true });
+  requestAnimationFrame(drawAmbient);
 }
 
 const copyButton = document.querySelector("[data-copy]");
