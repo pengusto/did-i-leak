@@ -103,19 +103,8 @@ button:focus-visible {
   transform: translate3d(calc(var(--shift-x) * .55), calc(var(--shift-y) * .55), 0);
 }
 
-.ambient-field::after {
-  position: absolute;
-  top: -15%;
-  bottom: -15%;
-  left: calc(var(--mx) - 9%);
-  width: 18%;
-  min-width: 130px;
-  content: "";
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 7%, transparent), transparent);
-  filter: blur(24px);
-  opacity: .32;
-  transform: translateX(var(--shift-x));
-}
+.ambient-canvas { display: block; width: 100%; height: 100%; opacity: .82; mix-blend-mode: screen; }
+html[data-theme="light"] .ambient-canvas { opacity: .48; mix-blend-mode: multiply; }
 
 .site-header,
 main,
@@ -865,10 +854,8 @@ h1 strong { display: block; color: var(--danger); font-weight: inherit; }
 @media (prefers-reduced-motion: no-preference) {
   .trace-live { animation: trace-dash 2.2s linear infinite; }
   .node.blocked-glow { animation: glow-pulse 2.8s ease-in-out infinite; }
-  .ambient-field::after { animation: ambient-sweep 9s ease-in-out infinite alternate; }
   @keyframes trace-dash { to { stroke-dashoffset: -34; } }
   @keyframes glow-pulse { 50% { opacity: .07; } }
-  @keyframes ambient-sweep { to { opacity: .12; transform: translateX(42px); } }
 }
 
 @media (pointer: coarse) {
