@@ -206,7 +206,7 @@ h2 {
 h1 {
   max-width: 640px;
   margin-bottom: 30px;
-  font-size: clamp(4.6rem, 7.7vw, 8.2rem);
+  font-size: clamp(4.6rem, 7.2vw, 7.8rem);
 }
 
 h1 strong { display: block; color: var(--danger); font-weight: inherit; }
