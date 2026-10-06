@@ -12,9 +12,17 @@ Your `.env` is gone. Your Git history remembers.
 
 It never prints full secrets and never changes credentials, Git history, refs, or repository visibility.
 
-## Run it
+## Install and run
 
-The fallback inspection needs only Python 3.9+ and Git:
+You need Python 3.9+ and Git. Clone into an unused directory:
+
+```sh
+git clone https://github.com/pengusto/did-i-leak.git
+cd did-i-leak
+./bin/did-i-leak --repo /path/to/target-repo --full
+```
+
+Replace `/path/to/target-repo` with the repository you want to inspect. The CLI defaults to the current working directory; running the next command from this checkout checks `did-i-leak` itself:
 
 ```sh
 ./bin/did-i-leak
@@ -25,6 +33,16 @@ Machine-readable output is safe to save or pipe:
 ```sh
 ./bin/did-i-leak --json
 ```
+
+### Fast after the first scan
+
+The first run checks the whole repository history. Later runs reuse safe local scan state and inspect what changed. Before a public launch, run a fresh full audit:
+
+```sh
+./bin/did-i-leak --full
+```
+
+The cache lives at `.git/did-i-leak/state.json`, is repository-local, and contains only validated metadata and redacted finding identifiers—not detected credential values. The working tree, staged changes, and relevant untracked files are checked on every run. A rewritten or uncertain history, changed scanner/detection configuration, corrupted cache, or incompatible cache schema falls back to a full audit.
 
 Exit codes are `0` for `GO`, `1` for `GO WITH REVIEW`, `2` for `NO-GO`, and `3` when the repository cannot be inspected.
 
@@ -37,7 +55,9 @@ Install these tools through your normal package manager or official release proc
 
 Both are invoked against the current tree and reachable Git history. TruffleHog verification is disabled by default so a local check does not send candidate credentials to external services.
 
-Without either scanner, the fallback still checks text in the current tree—including ignored `.env` files outside dependency/build directories—and historical blobs for credential-shaped values, private-key headers, JWTs, credential-bearing database URLs, PII, internal URLs, and absolute local paths. Missing scanners keep a clean result at `GO WITH REVIEW`.
+Incremental scanner coverage follows each tool's native capabilities. Gitleaks receives a `git --log-opts` delta for newly reachable commits and always scans the current directory. TruffleHog uses `--since-commit`/`--branch` for one changed local branch; new or mixed branches, tags, detached history, or ambiguous coverage use a conservative full Git scan. Its filesystem scan still runs every time.
+
+Without either scanner, the fallback still checks text in the current tree—including ignored `.env` files outside dependency/build directories—and historical blobs for credential-shaped values, private-key headers, JWTs, credential-bearing database URLs, PII, internal URLs, and absolute local paths. Missing or explicitly disabled scanners keep a clean result at `GO WITH REVIEW`.
 
 ## Agent skill
 

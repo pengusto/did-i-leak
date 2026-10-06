@@ -267,6 +267,8 @@ h1 strong { display: block; color: var(--danger); font-weight: inherit; }
   line-height: 1.55;
 }
 
+.hero-copy { min-width: 0; }
+
 .hero-lede b { font-family: var(--mono); font-size: .88em; }
 
 .command-box {

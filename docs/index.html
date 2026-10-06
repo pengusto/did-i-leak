@@ -10,7 +10,7 @@
   <meta property="og:description" content="Before you make a repo public, check what Git remembers.">
   <title>Did I Leak? — Git remembers.</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23111211'/%3E%3Cpath d='M7 8h18v4H7zm3 7h12v4H10zm3 7h6v3h-6z' fill='%23d8ff55'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=2258626-english-legal">
+  <link rel="stylesheet" href="styles.css?v=20261005-command">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -43,10 +43,11 @@
         <h1>Your <span class="mark">.env</span> is gone.<br><strong>Git remembers.</strong></h1>
         <p class="hero-lede">Did I Leak? turns the scary question before publishing into one calm verdict: <b>GO</b>, <b>GO WITH REVIEW</b>, or <b>NO-GO</b>.</p>
         <div class="command-box">
-          <code><span class="prompt">$</span> python3 scripts/did_i_leak.py --repo .</code>
-          <button class="copy-button" type="button" data-copy="python3 scripts/did_i_leak.py --repo .">Copy</button>
+          <code><span class="prompt">$</span> ./bin/did-i-leak --repo /path/to/target-repo --full</code>
+          <button class="copy-button" type="button" data-copy="./bin/did-i-leak --repo /path/to/target-repo --full">Copy</button>
           <span class="copy-status" aria-live="polite"></span>
         </div>
+        <p class="hero-note">Run from the cloned checkout and replace <code>/path/to/target-repo</code> with your repository. <a href="https://github.com/pengusto/did-i-leak#install-and-run">Install guide</a></p>
         <p class="hero-note"><span aria-hidden="true">↳</span> local-first / redacted output / no credential mutations</p>
       </div>
 
