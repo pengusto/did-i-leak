@@ -1,0 +1,8 @@
+Use case: infographic-diagram
+Asset type: landscape 16:9 explanatory preview for the open-source Did I Leak? skill, also a German portfolio card.
+Primary request: One polished editorial diagram of the actual workflow: working tree AND reachable Git history feed into a redacted report, then a human reviews and resolves the findings.
+Scene/backdrop: flat near-black #111211 background, generous empty space.
+Style/medium: exceptionally clear graphic design, crisp flat shapes, fine off-white lines, lime #d8ff55 accent, a small coral risk marker. No 3D.
+Composition: large title at upper left. Below, three generously spaced stages left to right with thin directional arrows. Left: folder/files plus recognizable Git branch nodes; one coral historical node and a removed-file outline, no safe node labels. Middle: paper report with thick redaction bars obscuring values and one coral finding marker. Right: understated human profile plus a magnifying glass examining that finding, conveying deliberate review; no approval tick.
+Text verbatim only: "Did I Leak?" as title; "Tree + history", "Redacted report", "Human review" below the three stages. Big highly readable off-white sans serif typography. No other text.
+Constraints: diagram ends at human review, no publish arrow, no safety certificate, shields, checkmarks, automated clearance or guaranteed security. No actual secrets, raw code, robots, flames, chrome objects, decorative pseudocode walls, photo scenes, watermark. Useful at small portfolio-card size.

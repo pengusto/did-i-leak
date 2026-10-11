@@ -4,6 +4,12 @@
 
 Your `.env` is gone. Your Git history remembers.
 
+![Working tree and Git history become a redacted report for human review.](docs/assets/did-i-leak-process.webp)
+
+[Website](https://pengusto.github.io/did-i-leak/) · [Preview asset and generation prompt](output/portfolio-handoff/README.md)
+
+The report supports a human decision. It is not a security certificate and does not publish your repository.
+
 `did-i-leak` is a small, local-first pre-publication check for developers, AI-assisted workflows, and open-source releases. It orchestrates established scanners instead of pretending to replace them, then turns the result into one useful verdict:
 
 - `GO`
@@ -85,6 +91,10 @@ Coverage
 * Gitleaks: completed
 * TruffleHog: completed
 ```
+
+## Website
+
+The static landing page lives in `docs/`. GitHub Pages publishes `main` from `/docs`; no separate deployment workflow or build dependencies are needed. The README and website use the same approved explanation image in `docs/assets/`.
 
 ## Development
 

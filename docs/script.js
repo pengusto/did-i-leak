@@ -25,102 +25,19 @@ function setTheme(theme) {
 setTheme(root.dataset.theme === "light" ? "light" : "dark");
 themeToggle?.addEventListener("click", () => setTheme(root.dataset.theme === "light" ? "dark" : "light"));
 
-const ambientField = document.querySelector(".ambient-field");
-const ambientCanvas = document.querySelector(".ambient-canvas");
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-const finePointer = window.matchMedia("(pointer: fine)");
-const ambientPointer = { x: .58, y: .42, targetX: .58, targetY: .42 };
-
-if (ambientField && !reducedMotion.matches && finePointer.matches) {
-  let frame = 0;
-  window.addEventListener("pointermove", (event) => {
-    if (event.pointerType && event.pointerType !== "mouse") return;
-    ambientPointer.targetX = event.clientX / window.innerWidth;
-    ambientPointer.targetY = event.clientY / window.innerHeight;
-    cancelAnimationFrame(frame);
-    frame = requestAnimationFrame(() => {
-      root.style.setProperty("--mx", `${(event.clientX / window.innerWidth) * 100}%`);
-      root.style.setProperty("--my", `${(event.clientY / window.innerHeight) * 100}%`);
-      root.style.setProperty("--shift-x", `${(event.clientX / window.innerWidth - .5) * 24}px`);
-      root.style.setProperty("--shift-y", `${(event.clientY / window.innerHeight - .38) * 20}px`);
-    });
-  }, { passive: true });
-}
-
-if (ambientCanvas && !reducedMotion.matches) {
-  const context = ambientCanvas.getContext("2d");
-  let width = 0;
-  let height = 0;
-  let scale = 1;
-
-  const resizeAmbient = () => {
-    const bounds = ambientCanvas.getBoundingClientRect();
-    scale = Math.min(window.devicePixelRatio || 1, 2);
-    width = bounds.width;
-    height = bounds.height;
-    ambientCanvas.width = width * scale;
-    ambientCanvas.height = height * scale;
-    context.setTransform(scale, 0, 0, scale, 0, 0);
-  };
-
-  const drawAmbient = (time) => {
-    ambientPointer.x += (ambientPointer.targetX - ambientPointer.x) * .035;
-    ambientPointer.y += (ambientPointer.targetY - ambientPointer.y) * .035;
-    context.clearRect(0, 0, width, height);
-    context.lineCap = "round";
-
-    const colors = [
-      getComputedStyle(root).getPropertyValue("--accent").trim(),
-      getComputedStyle(root).getPropertyValue("--danger").trim(),
-    ];
-    colors.forEach((color, index) => {
-      const phase = index * 2.4;
-      const base = height * (.34 + index * .2);
-      const amplitude = height * (.09 - index * .015);
-      const path = new Path2D();
-      for (let step = 0; step <= 28; step += 1) {
-        const progress = step / 28;
-        const x = -90 + progress * (width + 180);
-        const y = base + Math.sin(progress * 6.4 + time * (.00042 - index * .00012) + phase) * amplitude + (ambientPointer.y - .42) * height * .1;
-        if (step === 0) path.moveTo(x, y);
-        else path.lineTo(x, y);
-      }
-      context.strokeStyle = color;
-      context.shadowColor = color;
-      context.globalAlpha = .055;
-      context.shadowBlur = 36;
-      context.lineWidth = 28;
-      context.stroke(path);
-      context.globalAlpha = .24 - index * .05;
-      context.shadowBlur = 14;
-      context.lineWidth = 1.4;
-      context.stroke(path);
-    });
-    context.globalAlpha = 1;
-    requestAnimationFrame(drawAmbient);
-  };
-
-  resizeAmbient();
-  window.addEventListener("resize", resizeAmbient, { passive: true });
-  requestAnimationFrame(drawAmbient);
-}
-
-const copyButton = document.querySelector("[data-copy]");
-const copyStatus = document.querySelector(".copy-status");
-
-copyButton?.addEventListener("click", async () => {
-  const command = copyButton.dataset.copy;
-  try {
-    await navigator.clipboard.writeText(command);
-    copyButton.textContent = "Copied";
-    copyStatus.textContent = "command copied";
-  } catch {
-    copyStatus.textContent = "select the command above";
-  }
-  window.setTimeout(() => {
-    copyButton.textContent = "Copy";
-    copyStatus.textContent = "";
-  }, 2200);
+document.querySelectorAll("[data-copy]").forEach((button) => {
+  const status = button.parentElement.querySelector(".copy-status");
+  const label = button.textContent;
+  button.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(button.dataset.copy);
+      button.textContent = "Copied";
+      if (status) status.textContent = "Command copied";
+    } catch {
+      if (status) status.textContent = "Clipboard unavailable. Select and copy the command above.";
+    }
+    window.setTimeout(() => { button.textContent = label; }, 2200);
+  });
 });
 
 const demoOutput = document.querySelector("[data-terminal-output]");
@@ -129,6 +46,11 @@ const demoTitle = document.querySelector("[data-terminal-title]");
 const demoTabs = document.querySelectorAll("[data-demo-tab]");
 
 const demos = {
+  review: {
+    title: "did-i-leak / coverage review",
+    code: "1",
+    output: `<span class="terminal-muted">DID I LEAK?</span>\n\n<span class="terminal-action">GO WITH REVIEW</span>\n\n<span class="terminal-strong">No blockers detected by fallback heuristics</span>\n\n<span class="terminal-muted">Coverage</span>\nGitleaks: not installed\nTruffleHog: not installed\n\n<span class="terminal-action">Review incomplete detector coverage before publishing.</span>`,
+  },
   leak: {
     title: "did-i-leak / verdict",
     code: "2",
@@ -137,7 +59,7 @@ const demos = {
   clean: {
     title: "did-i-leak / verdict",
     code: "0",
-    output: `<span class="terminal-muted">DID I LEAK?</span>\n\n<span class="terminal-action">GO</span>\n\n<span class="terminal-strong">No blockers</span>\n\nCurrent tree: clean\nReachable history: clean\nPII / internal paths: none found\n\n<span class="terminal-action">Action: safe to continue.</span>\n\n<span class="terminal-muted">Coverage</span>\nGitleaks: completed\nTruffleHog: completed\nGit history: all reachable commits`,
+    output: `<span class="terminal-muted">DID I LEAK?</span>\n\n<span class="terminal-action">GO</span>\n\n<span class="terminal-strong">No blockers</span>\n\nCurrent tree: no findings\nReachable history: no findings\nPII / internal paths: none found\n\n<span class="terminal-action">Review coverage before deciding to publish.</span>\n\n<span class="terminal-muted">Coverage</span>\nGitleaks: completed\nTruffleHog: completed\nGit history: all reachable commits`,
   },
 };
 
@@ -145,7 +67,10 @@ demoTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     const demo = demos[tab.dataset.demoTab];
     if (!demo || !demoOutput) return;
-    demoTabs.forEach((item) => item.classList.toggle("active", item === tab));
+    demoTabs.forEach((item) => {
+      item.classList.toggle("active", item === tab);
+      item.setAttribute("aria-pressed", String(item === tab));
+    });
     demoOutput.innerHTML = demo.output;
     if (demoCode) demoCode.textContent = demo.code;
     if (demoTitle) demoTitle.textContent = demo.title;

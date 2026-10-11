@@ -8,13 +8,14 @@
   <meta name="color-scheme" content="dark light">
   <meta property="og:title" content="Did I Leak? — Git remembers.">
   <meta property="og:description" content="Before you make a repo public, check what Git remembers.">
+  <meta property="og:image" content="https://pengusto.github.io/did-i-leak/assets/did-i-leak-process.webp">
+  <meta property="og:image:alt" content="Tree and history to redacted report to human review">
   <title>Did I Leak? — Git remembers.</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23111211'/%3E%3Cpath d='M7 8h18v4H7zm3 7h12v4H10zm3 7h6v3h-6z' fill='%23d8ff55'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=20261005-command">
+  <link rel="stylesheet" href="styles.css?v=20261011-final">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <div class="ambient-field" aria-hidden="true"><canvas class="ambient-canvas"></canvas></div>
 
   <header class="site-header wrap">
     <a class="brand" href="#top" aria-label="Did I Leak home">
@@ -41,61 +42,26 @@
       <div class="hero-copy">
         <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> Pre-publication safety check</p>
         <h1>Your <span class="mark">.env</span> is gone.<br><strong>Git remembers.</strong></h1>
-        <p class="hero-lede">Did I Leak? turns the scary question before publishing into one calm verdict: <b>GO</b>, <b>GO WITH REVIEW</b>, or <b>NO-GO</b>.</p>
+        <p class="hero-lede">Check current files and reachable Git history locally. Get redacted findings and a verdict to review: <b>GO</b>, <b>GO WITH REVIEW</b>, or <b>NO-GO</b>.</p>
         <div class="command-box">
           <code><span class="prompt">$</span> ./bin/did-i-leak --repo /path/to/target-repo --full</code>
           <button class="copy-button" type="button" data-copy="./bin/did-i-leak --repo /path/to/target-repo --full">Copy</button>
           <span class="copy-status" aria-live="polite"></span>
         </div>
-        <p class="hero-note">Run from the cloned checkout and replace <code>/path/to/target-repo</code> with your repository. <a href="https://github.com/pengusto/did-i-leak#install-and-run">Install guide</a></p>
+        <p class="hero-note">Run from the cloned checkout and replace <code>/path/to/target-repo</code> with your repository. <a href="#install">Install guide</a></p>
         <p class="hero-note"><span aria-hidden="true">↳</span> local-first / redacted output / no credential mutations</p>
       </div>
 
-      <div class="hero-visual" aria-label="Illustration of Git history being checked for a deleted credential">
-        <div class="visual-label">REACHABLE HISTORY / LIVE TRACE</div>
-        <svg class="history-map" viewBox="0 0 620 520" role="img" aria-labelledby="history-title history-desc">
-          <title id="history-title">A Git history trace with one blocked commit</title>
-          <desc id="history-desc">A lime path moves through safe commits, hits a coral blocked commit, and continues to the current tree.</desc>
-          <defs>
-            <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-              <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity=".08" stroke-width="1"/>
-            </pattern>
-            <filter id="glow"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          </defs>
-          <rect width="620" height="520" fill="url(#grid)"/>
-          <path class="trace-muted" d="M55 395 C105 395 104 315 166 315 S221 416 276 416 S342 260 399 260 S466 155 530 155"/>
-          <path class="trace-live" d="M55 395 C105 395 104 315 166 315 S221 416 276 416 S342 260 399 260"/>
-          <path class="trace-blocked" d="M399 260 C446 260 446 155 530 155"/>
-          <circle class="node safe" cx="55" cy="395" r="11"/>
-          <circle class="node safe" cx="166" cy="315" r="11"/>
-          <circle class="node safe" cx="276" cy="416" r="11"/>
-          <circle class="node blocked-glow" cx="399" cy="260" r="25" filter="url(#glow)"/>
-          <circle class="node blocked" cx="399" cy="260" r="13"/>
-          <circle class="node current" cx="530" cy="155" r="12"/>
-          <g class="map-label">
-            <text x="55" y="437">origin</text>
-            <text x="166" y="283">feature</text>
-            <text x="276" y="459">cleanup</text>
-            <text class="blocked-text" x="399" y="220">BLOCKER</text>
-            <text x="530" y="119">current tree</text>
-          </g>
-          <g class="redaction" transform="translate(332 72)">
-            <rect width="150" height="42" rx="3"/>
-            <text x="14" y="26">SECRET: ███████</text>
-          </g>
-          <g class="stamp" transform="translate(420 330) rotate(-7)">
-            <rect width="140" height="47" rx="4"/>
-            <text x="70" y="29">NO-GO</text>
-          </g>
-        </svg>
-        <div class="visual-footer"><span>ALL REFS</span><span class="visual-status"><i></i> SCAN READY</span></div>
-      </div>
+      <figure class="process-preview">
+        <img src="assets/did-i-leak-process.webp" width="1672" height="941" alt="Working tree and Git history flow into a redacted report, then a person reviews the findings." fetchpriority="high">
+        <figcaption>Tree + reachable history → redacted findings → your decision. No automatic publication.</figcaption>
+      </figure>
     </section>
 
-    <section class="signal-strip wrap" aria-label="Product guarantees">
-      <div><strong>ALL REFS</strong><span>branches + tags + deleted blobs</span></div>
+    <section class="signal-strip wrap" aria-label="Scan scope">
+      <div><strong>LOCAL REFS</strong><span>branches + tags + deleted blobs</span></div>
       <div><strong>2 SCANNERS</strong><span>Gitleaks + TruffleHog when available</span></div>
-      <div><strong>0 SECRETS</strong><span>full values never reach the output</span></div>
+      <div><strong>REDACTED</strong><span>full values never reach the output</span></div>
     </section>
 
     <section class="section wrap" id="how">
@@ -103,7 +69,7 @@
         <p class="section-number">01 / THE MOMENT BEFORE PUBLISH</p>
         <div>
           <h2>One check.<br><em>Less dread.</em></h2>
-          <p>It is not another scanner to babysit. It is the short safety ritual you run before a repository leaves your laptop.</p>
+          <p>Inspect what is present, find what history retained, and resolve the findings before you decide to publish.</p>
         </div>
       </div>
       <div class="steps">
@@ -111,7 +77,7 @@
           <span class="step-index">01</span>
           <div class="step-icon icon-terminal" aria-hidden="true"><span>$</span><i></i><i></i></div>
           <h3>Run it where the code lives.</h3>
-          <p>Use the skill in Codex or call the tiny CLI directly. No account, no upload, no global installation.</p>
+          <p>Call the CLI locally without an account or repository upload. Or load the skill in a Codex-compatible agent, subject to that agent's own data policies.</p>
         </article>
         <article class="step">
           <span class="step-index">02</span>
@@ -122,8 +88,8 @@
         <article class="step step-last">
           <span class="step-index">03</span>
           <div class="step-icon icon-verdict" aria-hidden="true">NO-GO</div>
-          <h3>Get a verdict you can act on.</h3>
-          <p>Findings are deduplicated, redacted, and separated into blockers, review items, and likely false positives.</p>
+          <h3>Review and resolve the findings.</h3>
+          <p>Review the redacted file and commit references. Rotate exposed credentials first; assess PII and internal paths in context.</p>
         </article>
       </div>
     </section>
@@ -142,16 +108,16 @@
             <div class="card-top"><span>01</span><span>NOW</span></div>
             <svg viewBox="0 0 280 140" aria-hidden="true"><path d="M0 101h47V63h50v55h53V35h50v45h80"/><path class="accent-line" d="M0 101h47V63h50v55h53V35h50v45h80"/><circle cx="97" cy="63" r="6"/><circle cx="200" cy="35" r="6"/></svg>
             <h3>Current tree</h3>
-            <p>Tracked, staged, unstaged, untracked, and ignored files such as `.env` where they actually exist.</p>
+            <p>Tracked and untracked files, including ignored .env files outside dependency and build directories.</p>
           </article>
           <article class="coverage-card card-featured">
             <div class="card-top"><span>02</span><span>THEN</span></div>
             <svg viewBox="0 0 280 140" aria-hidden="true"><path d="M21 117V31m0 33h67m-67 0 38 45m-38-45 49-35m18-1h82m-82 0 50 35m-50 0h91m-91 0 33 49m-33-49 50-57"/><circle class="coral-dot" cx="88" cy="64" r="8"/><circle class="lime-dot" cx="170" cy="64" r="8"/><rect x="136" y="20" width="79" height="24" rx="3"/></svg>
             <h3>Reachable history</h3>
-            <p>All reachable commits, branches, tags, deleted historical files, and blobs that current code forgot.</p>
+            <p>Locally reachable commits, branches, tags, and deleted historical files. Unfetched remote history is outside the scan.</p>
           </article>
           <article class="coverage-card">
-            <div class="card-top"><span>03</span><span>SAFE</span></div>
+            <div class="card-top"><span>03</span><span>REPORT</span></div>
             <svg viewBox="0 0 280 140" aria-hidden="true"><rect x="20" y="23" width="240" height="95" rx="5"/><path d="M42 51h112M42 73h85M42 95h160"/><path class="redact-line" d="M166 51h64M140 73h91M210 95h20"/><circle cx="233" cy="28" r="14"/></svg>
             <h3>Redacted output</h3>
             <p>No full credentials in the terminal, JSON, examples, or handoff. You see the risk, not the secret.</p>
@@ -165,12 +131,13 @@
         <p class="section-number">03 / SEE THE VERDICT</p>
         <div>
           <h2>Useful beats<br><em>noisy.</em></h2>
-          <p>Toggle the two honest outcomes. A clean scan is reassuring. A historical hit is actionable.</p>
+          <p>Illustrative output, not results from your repository. A verdict summarizes findings and detector coverage; it is not a security certificate.</p>
         </div>
       </div>
       <div class="demo-switcher" role="group" aria-label="Choose an example verdict">
-        <button type="button" class="demo-tab active" data-demo-tab="leak">Historical hit</button>
-        <button type="button" class="demo-tab" data-demo-tab="clean">Clean result</button>
+        <button type="button" class="demo-tab active" data-demo-tab="leak" aria-pressed="true">Historical hit</button>
+        <button type="button" class="demo-tab" data-demo-tab="clean" aria-pressed="false">No findings</button>
+        <button type="button" class="demo-tab" data-demo-tab="review" aria-pressed="false">Missing scanner</button>
       </div>
       <div class="terminal" aria-live="polite">
         <div class="terminal-bar"><span class="terminal-dots" aria-hidden="true"><i></i><i></i><i></i></span><span data-terminal-title>did-i-leak / verdict</span><span class="terminal-live"><i></i> redacted</span></div>
@@ -196,6 +163,14 @@ Git history: all reachable commits</pre>
       </div>
     </section>
 
+    <section class="section wrap" id="examples">
+      <p class="section-number">CONCRETE BEFORE / AFTER</p>
+      <div class="example-grid">
+        <article><h3>“I deleted the .env.”</h3><p><b>Before:</b> the current folder looks clean, but an old commit still contains a credential.</p><p><b>After:</b> a redacted historical finding points to the file and commit. Revoke or rotate the credential before considering history cleanup.</p></article>
+        <article><h3>“The scan found nothing.”</h3><p><b>Before:</b> a missing detector could look like a clean scan.</p><p><b>After:</b> missing or disabled scanners keep the verdict at <code>GO WITH REVIEW</code>. Check coverage and any review items before deciding.</p></article>
+      </div>
+    </section>
+
     <section class="manifesto wrap">
       <p class="eyebrow"><span class="pulse" aria-hidden="true"></span> The rule</p>
       <blockquote>“Deleted” is not the same as “never exposed.”</blockquote>
@@ -206,13 +181,29 @@ Git history: all reachable commits</pre>
       <div>
         <p class="section-number">04 / MAKE IT A HABIT</p>
         <h2>Before public,<br><em>run this.</em></h2>
-        <p>Install the skill, keep the CLI, and make the last five seconds before publishing feel boring again.</p>
+        <p>Requires Python 3.9+ and Git. Clone into an unused directory. Gitleaks and TruffleHog are optional but recommended; install them separately through their official instructions.</p>
       </div>
       <div class="cta-panel">
-        <code><span>$</span> $did-i-leak</code>
+        <pre class="install-command"><code>git clone https://github.com/pengusto/did-i-leak.git
+cd did-i-leak
+./bin/did-i-leak --repo /path/to/target-repo --full</code></pre>
+        <button class="copy-button" type="button" data-copy="git clone https://github.com/pengusto/did-i-leak.git&#10;cd did-i-leak&#10;./bin/did-i-leak --repo /path/to/target-repo --full">Copy installation</button>
+        <span class="copy-status" aria-live="polite"></span>
+        <p>Replace the target path. For Codex-compatible agents, load <a href="https://github.com/pengusto/did-i-leak/blob/main/SKILL.md">SKILL.md</a> and invoke <code>$did-i-leak</code>.</p>
         <a class="primary-button" href="https://github.com/pengusto/did-i-leak#readme" target="_blank" rel="noreferrer">Read the install guide <span aria-hidden="true">↗</span></a>
         <a class="text-link icon-link" href="https://github.com/pengusto/did-i-leak" target="_blank" rel="noreferrer"><svg class="github-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.94 0-1.31.47-2.38 1.23-3.22-.12-.3-.53-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.3-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .3Z"/></svg> Browse the source <span aria-hidden="true">↗</span></a>
       </div>
+    </section>
+    <section class="section wrap limits" id="limits">
+      <p class="section-number">KNOW THE LIMITS</p>
+      <h2>A report.<br><em>Your decision.</em></h2>
+      <ul>
+        <li><b>GO is scoped:</b> no detected blockers or review items within reported coverage. It does not prove that a repository is safe.</li>
+        <li><b>Coverage can be incomplete:</b> only locally reachable history is available. Fallback text heuristics have size and binary-file limits; missing scanners or truncated coverage require review.</li>
+        <li><b>Local CLI:</b> scanners run offline, with TruffleHog credential verification disabled. If you use an AI agent, its own provider and tool data flows also apply.</li>
+        <li><b>You handle remediation:</b> the tool does not rotate credentials, rewrite history, change visibility, or publish a repository.</li>
+        <li><b>Fresh audit before publication:</b> use <code>--full</code>. Later routine runs can reuse validated, redacted scan metadata in <code>.git/did-i-leak/</code>.</li>
+      </ul>
     </section>
   </main>
 
@@ -221,6 +212,6 @@ Git history: all reachable commits</pre>
     <div class="footer-links"><a href="impressum.html">Legal notice</a><a href="datenschutz.html">Privacy</a><a class="icon-link" href="https://github.com/pengusto/did-i-leak" target="_blank" rel="noreferrer"><svg class="github-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.04c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.74.08-.74 1.2.08 1.84 1.23 1.84 1.23 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.94 0-1.31.47-2.38 1.23-3.22.77.84 1.23 1.91 1.23 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .3Z"/></svg>GitHub <span aria-hidden="true">↗</span></a></div>
   </footer>
 
-  <script src="script.js?v=2258626-english-legal" defer></script>
+  <script src="script.js?v=20261011-final" defer></script>
 </body>
 </html>
